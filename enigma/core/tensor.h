@@ -2,21 +2,23 @@
 #include <vector>
 #include <Python.h>
 
-class Tensor {
+class Tensor
+{
 public:
-    Tensor(const std::vector<long>& shape);
-    Tensor(const std::vector<long>& shape, const std::vector<float>& data);
+    Tensor(const std::vector<long> &shape);
+    Tensor(const std::vector<long> &shape, const std::vector<float> &data);
 
-
-    Tensor add(const Tensor& other) const;
-    Tensor multiply(const Tensor& other) const;
-
+    Tensor add(const Tensor &other) const;
+    Tensor multiply(const Tensor &other) const;
 
     void fill(float value);
     void randn();
     long size() const;
-    const std::vector<long>& shape() const;
-    const std::vector<float>& data() const;
+    const std::vector<long> &shape() const;
+    const std::vector<float> &data() const;
+
+    std::string repr() const;
+    std::string str() const;
 
 private:
     std::vector<long> shape_;
