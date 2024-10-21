@@ -47,6 +47,8 @@ namespace enigma
     {
       result += ":" + std::to_string(index_);
     }
+
+    return result;
   }
 
 } // namespace enigma

@@ -15,7 +15,7 @@ namespace enigma
     }
   }
 
-  bool isValidDeviceType(DeviceType device_type) 
+  bool is_valid_device_type(DeviceType device_type) 
   {
     switch (device_type) 
     {
