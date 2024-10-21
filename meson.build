@@ -1,21 +1,22 @@
-project('enigma', 'cpp',
-  version : '0.1',
-  default_options : ['warning_level=3', 'cpp_std=c++20'])
-
-py_mod = import('python')
-py3 = py_mod.find_installation()
-py3_dep = py3.dependency()
-
-incdir = include_directories('enigma/core')
-
-shared_module('enigma',
-  ['enigma/core/tensor.cpp', 'enigma/core/enigma_module.cpp'],
-  include_directories : incdir,
-  dependencies : py3_dep,
-  install : true,
-  install_dir : py3.get_install_dir() / 'enigma/core',
-  name_prefix : ''
+project(
+  'enigma',
+  'cpp',
+  version: '0.1.0',
+  default_options: ['cpp_std=c++20']
 )
 
-install_data('enigma/__init__.py', install_dir: py3.get_install_dir() / 'enigma')
-install_data('enigma/core/__init__.py', install_dir: py3.get_install_dir() / 'enigma/core')
+# Dependencies
+python3 = import('python').find_installation()
+
+# Include directories
+inc_dir = include_directories('include')
+
+
+
+# Example programs
+executable(
+  'basic_example',
+  'examples/basic_example.cpp',
+  include_directories: inc_dir,
+  dependencies: [cuda_dep]
+)

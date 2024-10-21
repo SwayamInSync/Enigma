@@ -1,0 +1,15 @@
+{
+  "configurations": [
+    {
+      "name": "Linux",
+      "includePath": ["${workspaceFolder}/**", "include/"],
+      "defines": [],
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "c23",
+      "cppStandard": "gnu++20",
+      "intelliSenseMode": "linux-gcc-x64",
+      "configurationProvider": "mesonbuild.mesonbuild"
+    }
+  ],
+  "version": 4
+}
