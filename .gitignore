@@ -224,3 +224,6 @@ poetry.toml
 pyrightconfig.json
 
 .DS_Store
+# Meson subprojects
+subprojects/*
+!subprojects/*.wrap
