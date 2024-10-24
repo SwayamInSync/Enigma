@@ -157,6 +157,59 @@ TEST_F(ScalarTest, MixedTypeOperations)
     EXPECT_TRUE(approxEqual(res3, 131.88));
 }
 
+TEST_F(ScalarTest, MultiplicationOperations)
+{
+    // Basic multiplication
+    EXPECT_EQ((Scalar(5) * Scalar(3)).to<int64_t>(), 15);
+    EXPECT_TRUE(approxEqual((Scalar(3.14) * Scalar(2.0)).to<double>(), 6.28));
+
+    // Mixed type multiplication
+    EXPECT_TRUE(approxEqual((Scalar(5) * Scalar(3.14)).to<double>(), 15.7));
+
+    // Complex multiplication
+    auto c1 = Scalar(std::complex<double>(3.0, 2.0));
+    auto c2 = Scalar(std::complex<double>(1.0, 1.0));
+    auto prod = (c1 * c2).to<std::complex<double>>();
+    EXPECT_TRUE(approxEqual(prod.real(), 1.0)); // 3*1 - 2*1 = 1
+    EXPECT_TRUE(approxEqual(prod.imag(), 5.0)); // 3*1 + 2*1 = 5
+
+    // Overflow tests
+    Scalar big(std::numeric_limits<int64_t>::max());
+    EXPECT_THROW(big * Scalar(2), ScalarTypeError);
+
+    // Boolean multiplication
+    EXPECT_TRUE((Scalar(true) * Scalar(true)).to<bool>());
+    EXPECT_FALSE((Scalar(true) * Scalar(false)).to<bool>());
+}
+
+TEST_F(ScalarTest, DivisionOperations)
+{
+    // Basic division
+    EXPECT_TRUE(approxEqual((Scalar(6) / Scalar(2)).to<double>(), 3.0));
+    EXPECT_TRUE(approxEqual((Scalar(3.14) / Scalar(2.0)).to<double>(), 1.57));
+
+    // Mixed type division
+    EXPECT_TRUE(approxEqual((Scalar(5) / Scalar(2.0)).to<double>(), 2.5));
+
+    // Complex division
+    auto c1 = Scalar(std::complex<double>(3.0, 2.0));
+    auto c2 = Scalar(std::complex<double>(1.0, 1.0));
+    auto quot = (c1 / c2).to<std::complex<double>>();
+    EXPECT_TRUE(approxEqual(quot.real(), 2.5));
+    EXPECT_TRUE(approxEqual(quot.imag(), -0.5));
+
+    // Division by zero tests
+    EXPECT_THROW(Scalar(1) / Scalar(0), ScalarTypeError);
+    EXPECT_THROW(Scalar(1.0) / Scalar(0.0), ScalarTypeError);
+    EXPECT_THROW(
+        Scalar(1) / Scalar(std::complex<double>(0.0, 0.0)),
+        ScalarTypeError);
+
+    // Integer division that results in floating point
+    auto result = (Scalar(5) / Scalar(2)).to<double>();
+    EXPECT_TRUE(approxEqual(result, 2.5));
+}
+
 // Edge Case Tests
 TEST_F(ScalarTest, EdgeCases)
 {
@@ -174,36 +227,101 @@ TEST_F(ScalarTest, EdgeCases)
     EXPECT_THROW(minInt - Scalar(1), ScalarTypeError);
 }
 
-// Comparison Tests
-TEST_F(ScalarTest, Comparisons)
+TEST_F(ScalarTest, ComparisonOperations)
 {
-    Scalar i1(42), i2(42), i3(43);
-    EXPECT_TRUE(i1 == i2);
-    EXPECT_FALSE(i1 == i3);
+    // Same type comparisons
+    EXPECT_TRUE(Scalar(42) == Scalar(42));
+    EXPECT_TRUE(Scalar(3.14159) == Scalar(3.14159));
+    EXPECT_TRUE(Scalar(true) == Scalar(true));
+    EXPECT_TRUE(Scalar(false) == Scalar(false));
 
-    Scalar f1(3.14), f2(3.14), f3(3.15);
-    EXPECT_TRUE(f1 == f2);
-    EXPECT_FALSE(f1 == f3);
+    // Floating point comparisons with epsilon
+    EXPECT_TRUE(Scalar(0.1 + 0.2) == Scalar(0.3));
+    EXPECT_TRUE(Scalar(1.0 + 1e-8) == Scalar(1.0));
 
     // Mixed type comparisons
     EXPECT_TRUE(Scalar(42) == Scalar(42.0));
-    EXPECT_FALSE(Scalar(42) == Scalar(42.1));
+
+    // Boolean comparisons (strict)
+    EXPECT_FALSE(Scalar(1) == Scalar(true));  // No implicit conversion
+    EXPECT_FALSE(Scalar(0) == Scalar(false)); // No implicit conversion
+    EXPECT_FALSE(Scalar(true) == Scalar(1));  // No implicit conversion
+    EXPECT_FALSE(Scalar(false) == Scalar(0)); // No implicit conversion
+
+    // Complex number comparisons
+    auto c1 = Scalar(std::complex<double>(1.0, 0.0));
+    auto c2 = Scalar(1.0);
+    EXPECT_TRUE(c1 == c2); // Complex with zero imaginary equals real
+
+    auto c3 = Scalar(std::complex<double>(1.0, 1e-8));
+    auto c4 = Scalar(std::complex<double>(1.0, 0.0));
+    EXPECT_TRUE(c3 == c4); // Small imaginary part within epsilon
+
+    // Different type comparisons
+    EXPECT_FALSE(Scalar(std::complex<double>(1.0, 1.0)) == Scalar(1.0));
+    EXPECT_FALSE(Scalar(42.5) == Scalar(42));
+
+    // Edge cases
+    EXPECT_TRUE(Scalar(0.0) == Scalar(0));
+    EXPECT_TRUE(Scalar(-0.0) == Scalar(0.0));
+
+    // Near zero comparisons
+    EXPECT_TRUE(Scalar(1e-8) == Scalar(0.0));
+    EXPECT_FALSE(Scalar(1e-6) == Scalar(0.0));
 }
 
 // Type Promotion Tests
 TEST_F(ScalarTest, TypePromotion)
 {
-    // Int + Float -> Float
-    EXPECT_EQ(Scalar::promoteTypes(ScalarType::Int64, ScalarType::Float64),
-              ScalarType::Float64);
+    // Same type promotion
+    EXPECT_EQ(Scalar::promoteTypes(ScalarType::Int64, ScalarType::Int64),
+              ScalarType::Int64);
 
-    // Float + Complex -> Complex
-    EXPECT_EQ(Scalar::promoteTypes(ScalarType::Float64, ScalarType::Complex128),
+    // Complex promotion
+    EXPECT_EQ(Scalar::promoteTypes(ScalarType::Float64, ScalarType::Complex64),
+              ScalarType::Complex128);
+    EXPECT_EQ(Scalar::promoteTypes(ScalarType::Int64, ScalarType::Complex64),
               ScalarType::Complex128);
 
-    // Int + Int -> Int
+    // Float promotion
+    EXPECT_EQ(Scalar::promoteTypes(ScalarType::Int64, ScalarType::Float64),
+              ScalarType::Float64);
+    EXPECT_EQ(Scalar::promoteTypes(ScalarType::Float32, ScalarType::Float64),
+              ScalarType::Float64);
+
+    // Integer promotion
     EXPECT_EQ(Scalar::promoteTypes(ScalarType::Int32, ScalarType::Int64),
               ScalarType::Int64);
+    EXPECT_EQ(Scalar::promoteTypes(ScalarType::UInt32, ScalarType::Int64),
+              ScalarType::Int64);
+    EXPECT_EQ(Scalar::promoteTypes(ScalarType::UInt64, ScalarType::Int64),
+              ScalarType::UInt64);
+
+    // Boolean promotion
+    EXPECT_EQ(Scalar::promoteTypes(ScalarType::Bool, ScalarType::Int64),
+              ScalarType::Int64);
+}
+
+TEST_F(ScalarTest, TypeCasting)
+{
+    // Same type casting
+    EXPECT_TRUE(Scalar::canCast(ScalarType::Int64, ScalarType::Int64));
+
+    // Complex casting
+    EXPECT_FALSE(Scalar::canCast(ScalarType::Complex64, ScalarType::Float64));
+    EXPECT_TRUE(Scalar::canCast(ScalarType::Float64, ScalarType::Complex64));
+
+    // Float casting
+    EXPECT_FALSE(Scalar::canCast(ScalarType::Float64, ScalarType::Int64));
+    EXPECT_TRUE(Scalar::canCast(ScalarType::Int64, ScalarType::Float64));
+
+    // Integer casting
+    EXPECT_TRUE(Scalar::canCast(ScalarType::Int32, ScalarType::Int64));
+    EXPECT_FALSE(Scalar::canCast(ScalarType::UInt64, ScalarType::Int64));
+
+    // Boolean casting
+    EXPECT_TRUE(Scalar::canCast(ScalarType::Bool, ScalarType::Int64));
+    EXPECT_TRUE(Scalar::canCast(ScalarType::Int64, ScalarType::Bool));
 }
 
 // String Representation Tests

@@ -204,7 +204,6 @@ namespace enigma
         Device device_;
 
     public:
-        // Constructors
         Scalar() : type_(ScalarType::Float64), device_(DeviceType::CPU) {}
 
         // Type-specific constructors
@@ -244,7 +243,6 @@ namespace enigma
             }
         }
 
-        // Type checking methods
         bool isFloatingPoint() const
         {
             return type_ == ScalarType::Float32 || type_ == ScalarType::Float64;
@@ -265,26 +263,21 @@ namespace enigma
 
         bool isBoolean() const { return type_ == ScalarType::Bool; }
 
-        // Accessors
         ScalarType type() const { return type_; }
         Device device() const { return device_; }
 
-        // Type conversion with checks
         template <typename T>
         T to() const;
 
-        // Basic arithmetic operations
         Scalar operator-() const;
         Scalar operator+(const Scalar &other) const;
         Scalar operator-(const Scalar &other) const;
         Scalar operator*(const Scalar &other) const;
         Scalar operator/(const Scalar &other) const;
 
-        // Comparison operators
         bool operator==(const Scalar &other) const;
         bool operator!=(const Scalar &other) const { return !(*this == other); }
 
-        // Static methods for type handling
         static ScalarType promoteTypes(ScalarType a, ScalarType b);
         static std::string typeName(ScalarType type);
         static bool canCast(ScalarType from, ScalarType to);
@@ -292,7 +285,6 @@ namespace enigma
         // Device movement (for future CUDA support)
         Scalar to(Device device) const;
 
-        // String representation
         std::string toString() const;
     };
 
