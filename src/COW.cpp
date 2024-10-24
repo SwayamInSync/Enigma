@@ -61,23 +61,22 @@ namespace enigma::cow
 
   void COWDeleter::deleter(DataPtr *data_ptr)
   {
-    print("COWDeleter::deleter\n");
+
     if (!data_ptr || !data_ptr->get_context())
       return;
 
     auto *cow_ctx = static_cast<COWDeleterContext *>(data_ptr->get_context());
 
     int64_t current_count = cow_ctx->reference_count();
-    print(current_count);
-    print("\n");
+
     if (current_count > 0)
     {
-      print("Deleter: Trying to delete\n");
+
       auto result = cow_ctx->decrement_refcount();
 
       if (auto *original_ctx = std::get_if<void *>(&result))
       {
-        print("orignal found, deleting it\n");
+
         auto data_deleter = cow_ctx->get_original_deleter();
         delete cow_ctx;
         data_deleter(data_ptr);

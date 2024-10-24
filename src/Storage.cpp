@@ -7,7 +7,7 @@ namespace enigma
 {
   Storage::Storage(size_t size_bytes, const Device &device) : size_bytes_(size_bytes), device_(device)
   {
-    print("Creating new Storage\n");
+
     allocator_ = get_allocator(device);
     if (!allocator_)
     {
@@ -29,7 +29,6 @@ namespace enigma
 
   Storage::Storage() : size_bytes_(0)
   {
-    print("Creating new Storage\n");
   }
 
   Storage::~Storage()
@@ -46,16 +45,11 @@ namespace enigma
 
     data_ptr_ = std::make_unique<DataPtr>(ptr, nullptr, [this](DataPtr *p)
                                           { allocator_->deallocate(p->get()); }, device_); // data, ctx, deleter, device
-    print("Data Ptr created at: ");
-    print(data_ptr_.get());
-    print("\n");
   }
 
   void Storage::deallocate()
   {
-    print("Storage::deallocate: ");
-    print(data_ptr_.get());
-    print("\n");
+
     data_ptr_.reset();
   }
 

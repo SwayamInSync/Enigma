@@ -17,9 +17,7 @@ namespace enigma
 
   void CPUAllocator::deallocate(void *ptr)
   {
-    print("deallocating void *data_: ");
-    print(ptr);
-    print("\n");
+
     std::free(ptr);
   }
 

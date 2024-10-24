@@ -27,40 +27,18 @@ namespace enigma
     // Constructors
     DataPtr() : data_(nullptr), ctx_(nullptr), deleter_(nullptr), device_(DeviceType::CPU), deleter_id_(INVALID_DELETER_ID)
     {
-      print("DataPtr constructed with ctx and data: ");
-      print(this);
-      print("   ");
-      print(ctx_);
-      print("   ");
-      print(data_);
-      print("\n");
     }
     DataPtr(void *data, void *ctx, DeleterFn deleter, Device device, uintptr_t deleter_id = INVALID_DELETER_ID)
         : data_(data), ctx_(ctx), deleter_(std::move(deleter)), device_(device), deleter_id_(deleter_id)
     {
-      print("DataPtr constructed with ctx and data: ");
-      print(this);
-      print("   ");
-      print(ctx_);
-      print("   ");
-      print(data_);
-      print("\n");
     }
 
     ~DataPtr()
     {
 
-      print("~DataPtr\n");
-      if (!ctx_)
-        print("Deleting non-COW of: ");
-      else
-        print("Deleting COW of: ");
-      print(ctx_);
-      print("\n");
       deleter_(this);
       ctx_ = nullptr;  // since this ptr is deleted
       data_ = nullptr; // same reason
-      print("~DataPtr Done\n");
     }
 
     // Getters
@@ -91,9 +69,7 @@ namespace enigma
     }
     void set_context(void *ctx)
     {
-      print("setting context: ");
-      print(ctx);
-      print("\n");
+
       ctx_ = ctx;
     }
 
