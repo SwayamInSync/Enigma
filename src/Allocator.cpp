@@ -1,12 +1,13 @@
 #include <cstdlib>
 #include <stdexcept>
 #include "Allocator.h"
+#include "DEBUG.h"
 
 namespace enigma
 {
-  void * CPUAllocator::allocate(size_t num_bytes)
+  void *CPUAllocator::allocate(size_t num_bytes)
   {
-    void * ptr = std::malloc(num_bytes);
+    void *ptr = std::malloc(num_bytes);
     if (ptr == nullptr)
     {
       throw std::bad_alloc();
@@ -14,12 +15,15 @@ namespace enigma
     return ptr;
   }
 
-  void CPUAllocator::deallocate(void * ptr)
+  void CPUAllocator::deallocate(void *ptr)
   {
+    print("deallocating void *data_: ");
+    print(ptr);
+    print("\n");
     std::free(ptr);
   }
 
-  std::shared_ptr<Allocator> get_allocator(const Device & device)
+  std::shared_ptr<Allocator> get_allocator(const Device &device)
   {
     if (device.is_cpu())
     {

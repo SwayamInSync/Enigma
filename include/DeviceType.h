@@ -7,6 +7,7 @@ namespace enigma
 {
   enum class DeviceType : int8_t
   {
+    INVALID_TYPE = -1,
     CPU = 0,
     CUDA
   };

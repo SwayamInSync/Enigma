@@ -3,11 +3,12 @@
 
 namespace enigma
 {
+  Device::Device() : type_(DeviceType::INVALID_TYPE), index_(-1) {}
   Device::Device(DeviceType type, int index) : type_(type), index_(index)
   {
-    if (type_ == DeviceType::CPU && index_ != -1 && index_ != 0) 
+    if (type_ == DeviceType::CPU && index_ != -1 && index_ != 0)
     {
-        throw std::invalid_argument("CPU device index must be -1 or 0");
+      throw std::invalid_argument("CPU device index must be -1 or 0");
     }
     else if (!is_valid_device_type(type_))
     {
@@ -15,14 +16,14 @@ namespace enigma
     }
   }
 
-  Device::Device(const std::string & device_string)
+  Device::Device(const std::string &device_string)
   {
-    if (device_string.substr(0,3) == "cpu")
+    if (device_string.substr(0, 3) == "cpu")
     {
       type_ = DeviceType::CPU;
       index_ = 0;
     }
-    else if (device_string.substr(0,4) == "cuda")
+    else if (device_string.substr(0, 4) == "cuda")
     {
       type_ = DeviceType::CUDA;
       if (device_string.length() > 5 && device_string[4] == ':')
