@@ -9,7 +9,7 @@ Enigma is a C/C++ based tensor framework for building dynamic neural networks wi
 - [x] **0.1 Storage Implementation**
 
   - [x] Basic Storage class with memory management
-  - [x] Smart pointer integration for ownership
+  - [x] Custom Data-Pointer pointer for memory ownership
   - [x] Exception-safe memory operations
   - [x] CPU Allocator with future CUDA support design
 
