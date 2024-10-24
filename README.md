@@ -7,33 +7,37 @@ Enigma is a C/C++ based tensor framework for building dynamic neural networks wi
 ## 0. **Core Foundation**
 
 - [x] **0.1 Storage Implementation**
-- [x] Basic Storage class with memory management
-- [x] Smart pointer integration for ownership
-- [x] Exception-safe memory operations
-- [x] CPU Allocator with future CUDA support design
+
+  - [x] Basic Storage class with memory management
+  - [x] Smart pointer integration for ownership
+  - [x] Exception-safe memory operations
+  - [x] CPU Allocator with future CUDA support design
 
 - [x] **0.2 Memory Optimization**
-- [x] Copy-on-Write (COW) mechanism
-- [x] Lazy cloning implementation
-- [x] Thread-safe reference counting
-- [x] Automatic materialization
+
+  - [x] Copy-on-Write (COW) mechanism
+  - [x] Lazy cloning implementation
+  - [x] Thread-safe reference counting
+  - [x] Automatic materialization
 
 - [x] **0.3 Device Abstraction**
-- [x] Device type enumeration
-- [x] Device-specific allocator framework
-- [x] CPU device implementation
-- [x] Future CUDA device support
+
+  - [x] Device type enumeration
+  - [x] Device-specific allocator framework
+  - [x] CPU device implementation
+  - [x] Future CUDA device support
 
 - [x] **0.4 Scalar Types**
-- [x] Basic scalar type implementations (float, int, etc.)
-- [x] Type conversion system
-- [ ] Integration with Storage system (maybe not needed since, stack-based implementation)
-- [x] Memory-aligned operations
+
+  - [x] Basic scalar type implementations (float, int, etc.)
+  - [x] Type conversion system
+  - [ ] Integration with Storage system (maybe not needed since, stack-based implementation)
+  - [x] Memory-aligned operations
 
 - [x] **0.5 Scalar Operations**
-- [x] Basic arithmetic operations
-- [x] Type promotion rules
-- [x] Operation error handling
+  - [x] Basic arithmetic operations
+  - [x] Type promotion rules
+  - [x] Operation error handling
 
 ## 1. **Core Tensor Library**
 
