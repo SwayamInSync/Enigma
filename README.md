@@ -31,11 +31,13 @@ Enigma is a C/C++ based tensor framework for building dynamic neural networks wi
 
   - [x] Basic scalar type implementations (float, int, etc.)
   - [x] Type conversion system
+  - [x] Strict-Handling Overflow/Underflow between casting
+  - [x] All explicit-cast design
   - [ ] Integration with Storage system (maybe not needed since, stack-based implementation)
   - [x] Memory-aligned operations
 
 - [x] **0.5 Scalar Operations**
-  - [x] Basic arithmetic operations
+  - [x] Basic arithmetic/logical operations
   - [x] Type promotion rules
   - [x] Operation error handling
 
