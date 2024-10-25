@@ -2,8 +2,18 @@
 
 ## Work In Progress... 🚧
 
-Enigma is a C/C++ based tensor framework for building dynamic neural networks with optimized tensor computations and GPU acceleration.
+Enigma is a C/C++ based tensor framework designed for building dynamic neural networks with optimized tensor computations and GPU acceleration, featuring seamless **Python** bindings for easy integration and usage through a simple `enigma` import.
+<p align="center">
+  <img src="assets/logo.png" alt="Description" width="500">
+</p>
 
+### Language Support:
+![C++](https://img.shields.io/badge/C%2B%2B-orange.svg)   ![Python](https://img.shields.io/badge/Python-blue.svg) 
+
+
+<details>
+<summary>Project Roadmap(Click Me)</summary>
+  
 ## 0. **Core Foundation**
 
 - [x] **0.1 Storage Implementation**
@@ -140,3 +150,4 @@ Enigma is a C/C++ based tensor framework for building dynamic neural networks wi
   - [ ] Include guidelines for contributing to the project.
 
 ---
+</details>
