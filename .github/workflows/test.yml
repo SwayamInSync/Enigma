@@ -35,6 +35,7 @@ jobs:
             ninja-build \
             cmake \
             build-essential
+          pip install "pybind11[global]"
 
       - name: Install system dependencies (macOS)
         if: runner.os == 'macOS'
