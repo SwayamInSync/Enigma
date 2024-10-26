@@ -28,6 +28,34 @@ enigma_lib = static_library('enigma',
   cpp_args: cpp_args
 )
 
+# Python extension module
+py_mod = import('python')
+py3 = py_mod.find_installation('python3', pure: false)  # Set pure to false
+py3_dep = py3.dependency()
+
+pybind11_dep = dependency('pybind11', required: true)
+
+py3.extension_module('_enigma',
+    'python/src/bindings.cpp',
+    include_directories: inc_dir,
+    link_with: enigma_lib,
+    dependencies: [pybind11_dep, py3_dep],
+    cpp_args: cpp_args,
+    install: true,
+    install_dir: py3.get_install_dir() / 'enigma'  # Specify install directory
+)
+
+# Install Python package files
+python_files = [
+  'python/enigma/__init__.py',
+]
+
+py3.install_sources(
+  python_files,
+  pure: false,  # Set pure to false
+  subdir: 'enigma'
+)
+
 # Test Dependencies
 gtest_proj = subproject('gtest')
 gtest_dep = gtest_proj.get_variable('gtest_dep')

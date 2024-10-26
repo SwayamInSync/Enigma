@@ -3,13 +3,20 @@
 ## Work In Progress... 🚧
 
 Enigma is a C/C++ based tensor framework designed for building dynamic neural networks with optimized tensor computations and GPU acceleration, featuring seamless **Python** bindings for easy integration and usage through a simple `enigma` import.
+
 <p align="center">
   <img src="assets/logo.png" alt="Description" width="500">
 </p>
 
 ### Language Support:
-![C++](https://img.shields.io/badge/C%2B%2B-orange.svg)   ![Python](https://img.shields.io/badge/Python-blue.svg) 
 
+![C++](https://img.shields.io/badge/C%2B%2B-orange.svg) ![Python](https://img.shields.io/badge/Python-blue.svg)
+
+## Installation
+
+```bash
+pip install enigma
+```
 
 <details>
 <summary>Project Roadmap(Click Me)</summary>
@@ -150,4 +157,163 @@ Enigma is a C/C++ based tensor framework designed for building dynamic neural ne
   - [ ] Include guidelines for contributing to the project.
 
 ---
+
 </details>
+
+## Quick Start
+
+```python
+import enigma
+
+# Create scalars
+x = enigma.Scalar(42)        # Integer
+y = enigma.Scalar(3.14)      # Float
+z = enigma.Scalar(1 + 2j)    # Complex
+b = enigma.Scalar(True)      # Boolean
+
+# Basic arithmetic
+result = x + y               # Automatic type promotion
+print(result)                # 45.14
+```
+
+## Basic Usage
+
+### Creating Scalars
+
+```python
+import enigma
+
+# Different ways to create scalars
+i = enigma.Scalar(42)        # Integer type
+f = enigma.Scalar(3.14)      # Float type
+c = enigma.Scalar(1 + 2j)    # Complex type
+b = enigma.Scalar(True)      # Boolean type
+
+# Check types
+print(i.dtype)               # ScalarType.Int64
+print(f.is_floating_point()) # True
+print(c.is_complex())        # True
+print(b.is_bool())          # True
+```
+
+### Arithmetic Operations
+
+```python
+# Basic arithmetic with automatic type promotion
+x = enigma.Scalar(10)
+y = enigma.Scalar(3)
+
+addition = x + y             # 13
+subtraction = x - y         # 7
+multiplication = x * y      # 30
+division = x / y            # 3.333... (promotes to float)
+
+# Mixed-type operations
+f = enigma.Scalar(3.14)
+result = x * f              # 31.4 (float result)
+```
+
+### Type Conversion
+
+```python
+# Safe type conversions
+x = enigma.Scalar(42)
+as_float = x.to_float()    # 42.0
+as_int = x.to_int()        # 42
+as_bool = x.to_bool()      # True
+
+# Error handling for invalid conversions
+try:
+    enigma.Scalar(3.14).to_int()  # Will raise ScalarTypeError
+except enigma.ScalarTypeError as e:
+    print(f"Cannot convert: {e}")
+```
+
+### Type Promotion Rules
+
+```python
+# Check type promotion
+int_type = enigma.int64
+float_type = enigma.float64
+result_type = enigma.promote_types(int_type, float_type)
+print(result_type)  # ScalarType.Float64
+
+# Automatic promotion in operations
+i = enigma.Scalar(5)           # Int64
+f = enigma.Scalar(2.5)         # Float64
+result = i + f                 # Result is Float64
+print(result.dtype)            # ScalarType.Float64
+```
+
+### Error Handling
+
+```python
+try:
+    # Division by zero
+    result = enigma.Scalar(1) / enigma.Scalar(0)
+except enigma.ScalarError as e:
+    print(f"Error: {e}")
+
+try:
+    # Invalid type conversion
+    float_val = enigma.Scalar(3.14)
+    int_val = float_val.to_int()  # Will raise ScalarTypeError
+except enigma.ScalarTypeError as e:
+    print(f"Conversion error: {e}")
+```
+
+### Complex Numbers
+
+```python
+# Working with complex numbers
+c1 = enigma.Scalar(1 + 2j)
+c2 = enigma.Scalar(2 - 1j)
+
+# Complex arithmetic
+sum_c = c1 + c2              # 3 + 1j
+prod_c = c1 * c2             # 4 + 3j
+
+# Converting to Python complex
+py_complex = c1.to_complex() # Get Python complex number
+print(py_complex.real)       # 1.0
+print(py_complex.imag)       # 2.0
+```
+
+### Type Safety
+
+```python
+# Strict type checking
+bool_val = enigma.Scalar(True)
+int_val = enigma.Scalar(1)
+
+# No implicit conversion between bool and int
+print(bool_val == int_val)   # False
+
+# Check if casting is possible
+can_cast = enigma.can_cast(enigma.float64, enigma.int64)
+print(can_cast)              # False (can't safely cast float to int)
+```
+
+### Comparisons
+
+```python
+# Value comparisons
+a = enigma.Scalar(42)
+b = enigma.Scalar(42.0)
+c = enigma.Scalar(43)
+
+print(a == b)    # True (same value, different types)
+print(a != c)    # True
+```
+
+## Advanced Features
+
+### Epsilon Comparisons for Floating Point
+
+```python
+x = enigma.Scalar(0.1 + 0.2)
+y = enigma.Scalar(0.3)
+
+# Automatically handles floating point precision
+print(x == y)    # True
+```
