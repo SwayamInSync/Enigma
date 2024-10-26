@@ -14,17 +14,9 @@ Enigma is a C/C++ based tensor framework designed for building dynamic neural ne
 
 ## Installation
 
-- With PyPI
-  ```bash
-  pip install enigma
-  ```
-- Building from source code
-
-  ```bash
-  pip install -e .
-  # OR
-  bash reinstall.sh
-  ```
+```bash
+pip install enigma
+```
 
 <details>
 <summary>Project Roadmap(Click Me)</summary>
