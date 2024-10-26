@@ -37,13 +37,15 @@ jobs:
             build-essential
           pip install "pybind11[global]"
 
-      - name: Install system dependencies (macOS)
+      - name: Install build dependencies (macOS)
         if: runner.os == 'macOS'
         run: |
-          brew install \
-            pybind11 \
-            ninja \
-            cmake
+          brew install ninja pybind11 cmake
+          pip install --upgrade pip
+          pip install pytest meson meson-python numpy
+          # Verify ninja is installed and in PATH
+          which ninja
+          ninja --version
 
       - name: Install Python dependencies
         run: |
