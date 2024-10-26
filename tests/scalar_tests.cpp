@@ -1,6 +1,9 @@
 #include <gtest/gtest.h>
 #include <cmath>
 #include <limits>
+#include <chrono>
+#include <complex>
+#include <string>
 #include "Scalar.h"
 
 using namespace enigma;
