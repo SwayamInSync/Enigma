@@ -35,22 +35,15 @@ jobs:
             ninja-build \
             cmake \
             build-essential
-          pip install "pybind11[global]"
 
       - name: Install system dependencies (macOS)
         if: runner.os == 'macOS'
         run: |
           brew install ninja pybind11 cmake
+          # Create a symlink to ensure ninja is in the system path
+          sudo ln -sf $(brew --prefix)/bin/ninja /usr/local/bin/ninja
           pip install --upgrade pip wheel setuptools
           pip install "pybind11[global]"
-
-      # Verify the environment setup
-      - name: Verify environment
-        run: |
-          echo "Python: $(python --version)"
-          echo "Pip: $(pip --version)"
-          echo "Ninja: $(which ninja)"
-          ninja --version
 
       - name: Install Python dependencies
         run: |
@@ -58,42 +51,58 @@ jobs:
           pip install pytest meson>=1.3.2 meson-python numpy ninja
 
       - name: Configure Meson
-        run: |
-          # On macOS, ensure ninja is in the system PATH
-          if [ "$RUNNER_OS" = "macOS" ]; then
-            export PATH="/usr/local/bin:$PATH"
-          fi
-          meson setup build
+        run: meson setup build
 
       - name: Build
-        run: |
-          if [ "$RUNNER_OS" = "macOS" ]; then
-            export PATH="/usr/local/bin:$PATH"
-          fi
-          meson compile -C build
+        run: meson compile -C build
 
       - name: Run C++ Tests
-        run: |
-          if [ "$RUNNER_OS" = "macOS" ]; then
-            export PATH="/usr/local/bin:$PATH"
-          fi
-          meson test -C build -v
+        run: meson test -C build -v
 
       - name: Install Python Package
+        if: runner.os == 'macOS'
+        env:
+          PATH: "/usr/local/bin:/usr/bin:/bin:${{ env.PATH }}"
+          PYTHONPATH: ${{ github.workspace }}
+          NINJA_PATH: "/usr/local/bin/ninja"
+          DYLD_LIBRARY_PATH: "/usr/local/lib:$DYLD_LIBRARY_PATH"
         run: |
-          if [ "$RUNNER_OS" = "macOS" ]; then
-            export PATH="/usr/local/bin:$PATH"
-          fi
+          # Print diagnostic information
+          echo "Current PATH: $PATH"
+          echo "Ninja location: $(which ninja)"
+          echo "Ninja version: $(ninja --version)"
+          echo "Python location: $(which python)"
+          echo "Python version: $(python --version)"
+
+          # Install package
           pip install -e .
 
-      - name: Run Python Tests
+      - name: Install Python Package (Linux)
+        if: runner.os == 'Linux'
+        run: pip install -e .
+
+      - name: Run Python Tests (macOS)
+        if: runner.os == 'macOS'
+        env:
+          PATH: "/usr/local/bin:/usr/bin:/bin:${{ env.PATH }}"
+          PYTHONPATH: ${{ github.workspace }}
+          NINJA_PATH: "/usr/local/bin/ninja"
+          DYLD_LIBRARY_PATH: "/usr/local/lib:$DYLD_LIBRARY_PATH"
         run: |
-          if [ "$RUNNER_OS" = "macOS" ]; then
-            export PATH="/usr/local/bin:$PATH"
-          fi
+          # Verify ninja is available
+          which ninja
+          ninja --version
+
           # Verify module can be imported
           python -c "import enigma; print('Enigma import successful')"
+
           # Run tests
+          pytest python/tests -v
+
+      - name: Run Python Tests (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          python -c "import enigma; print('Enigma import successful')"
           pytest python/tests -v
 
       - name: Upload Test Results
