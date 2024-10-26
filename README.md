@@ -14,13 +14,71 @@ Enigma is a C/C++ based tensor framework designed for building dynamic neural ne
 
 ## Installation
 
-```bash
-pip install enigma
+### Development Installation (C++)
+
+Directly use the public headers from `include`
+
+```cpp
+#include "Scalar.h"
+
+int main() {
+    enigma::Scalar x(42);
+    enigma::Scalar y(3.14);
+    auto z = x + y;
+    // ...
+}
 ```
 
+### Compiling and testing (C++)
+
+```bash
+>>> meson setup build
+>>> meson compile -C build
+
+# running tests
+>>> meson test - C build
+```
+
+---
+
+### Development Installation (Python)
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/swayaminsync/enigma.git
+   cd enigma
+   ```
+2. Install dependencies
+
+   #### Ubuntu/Debian
+
+   ```bash
+   # Install system dependencies
+   >>> sudo apt-get update
+   >>> sudo apt-get install -y ninja-build cmake build-essential
+
+   # Install Python dependencies
+   >>> pip install "pybind11[global]" meson meson-python
+   ```
+
+   #### macOS
+
+   ```bash
+   # Install system dependencies
+   >>> brew install ninja pybind11 cmake
+   >>> pip install meson meson-python
+   ```
+
+3. Install Enigma
+   ```bash
+   >>> pip install -e .
+   ```
+
+---
+
 <details>
-<summary>Project Roadmap(Click Me)</summary>
-  
+   <summary>Project Roadmap(Click Me)</summary>
+
 ## 0. **Core Foundation**
 
 - [x] **0.1 Storage Implementation**
@@ -156,9 +214,9 @@ pip install enigma
   - [ ] Document internal design choices and code structure.
   - [ ] Include guidelines for contributing to the project.
 
----
-
 </details>
+
+---
 
 ## Quick Start
 
