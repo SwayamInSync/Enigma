@@ -93,6 +93,7 @@ jobs:
           # Verify ninja is available
           which ninja
           ninja --version
+          pip install ninja
 
           # Verify module can be imported
           python -c "import enigma; print('Enigma import successful')"
