@@ -3,6 +3,7 @@
 #include <memory>
 #include <atomic>
 #include <shared_mutex>
+#include <mutex>
 #include <variant>
 #include <cstdint>
 #include <stdexcept>
